@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClientesApp.Data;
 using ClientesApp.Models;
@@ -47,9 +50,11 @@ namespace ClientesApp.Controllers
         }
 
         // POST: Clientes/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Nombres,Apellidos,Correo,Dirección,Compañía,Nota")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("ID,Nombres,Apellidos,Correo,Dirección,Compañía,Nota,Fecha_Registro")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -77,9 +82,11 @@ namespace ClientesApp.Controllers
         }
 
         // POST: Clientes/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Nombres,Apellidos,Correo,Dirección,Compañía,Nota")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Nombres,Apellidos,Correo,Dirección,Compañía,Nota,Fecha_Registro")] Cliente cliente)
         {
             if (id != cliente.ID)
             {
@@ -133,7 +140,11 @@ namespace ClientesApp.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cliente = await _context.Clientes.FindAsync(id);
-            _context.Clientes.Remove(cliente);
+            if (cliente != null)
+            {
+                _context.Clientes.Remove(cliente);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
